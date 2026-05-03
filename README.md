@@ -1,3 +1,4 @@
+
 # VoteGuide - AI-Powered Civic Education Assistant
 
 VoteGuide is an interactive web application that helps users understand the election process, timelines, and voting steps in an engaging, easy-to-follow way. Built with React, Tailwind CSS, and AI-powered assistance.
