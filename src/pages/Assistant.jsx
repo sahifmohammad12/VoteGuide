@@ -36,7 +36,7 @@ const Assistant = () => {
 
   const callGeminiAPI = async (conversationHistory) => {
     try {
-      const API_KEY = "AIzaSyBR1gbbt2cSDGueml5Rob_t8tWJA2yCz4A"; // Note: In production, this should be handled securely
+      const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`, {
         method: "POST",
         headers: {
