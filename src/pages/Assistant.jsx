@@ -37,6 +37,9 @@ const Assistant = () => {
   const callGeminiAPI = async (conversationHistory) => {
     try {
       const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!API_KEY) {
+        throw new Error("API configuration is missing.");
+      }
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`, {
         method: "POST",
         headers: {
@@ -72,11 +75,20 @@ If asked about a specific country, default to explaining the US federal election
   };
 
   const handleSendMessage = async (messageText) => {
-    if (!messageText.trim()) return;
+    if (!messageText || !messageText.trim()) return;
+
+    // Security: Input validation and sanitization
+    if (messageText.length > 500) {
+      alert("Message is too long. Please keep it under 500 characters.");
+      return;
+    }
+    
+    // Basic sanitization to prevent XSS
+    const sanitizedText = messageText.replace(/[<>]/g, '');
 
     const userMessage = {
       id: Date.now(),
-      text: messageText,
+      text: sanitizedText,
       isUser: true,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
@@ -90,7 +102,7 @@ If asked about a specific country, default to explaining the US federal election
       role: msg.isUser ? 'user' : 'model',
       parts: [{ text: msg.text }]
     }));
-    conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
+    conversationHistory.push({ role: 'user', parts: [{ text: sanitizedText }] });
 
     try {
       const response = await callGeminiAPI(conversationHistory);
