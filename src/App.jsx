@@ -1,11 +1,13 @@
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Timeline from './pages/Timeline';
-import Guide from './pages/Guide';
-import Assistant from './pages/Assistant';
-import FAQ from './pages/FAQ';
 import { motion } from 'framer-motion';
+
+const Home = React.lazy(() => import('./pages/Home'));
+const Timeline = React.lazy(() => import('./pages/Timeline'));
+const Guide = React.lazy(() => import('./pages/Guide'));
+const Assistant = React.lazy(() => import('./pages/Assistant'));
+const FAQ = React.lazy(() => import('./pages/FAQ'));
 
 function App() {
   return (
@@ -17,13 +19,15 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/timeline" element={<Timeline />} />
-            <Route path="/guide" element={<Guide />} />
-            <Route path="/assistant" element={<Assistant />} />
-            <Route path="/faq" element={<FAQ />} />
-          </Routes>
+          <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]"><div className="text-xl font-serif text-navy">Loading...</div></div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/timeline" element={<Timeline />} />
+              <Route path="/guide" element={<Guide />} />
+              <Route path="/assistant" element={<Assistant />} />
+              <Route path="/faq" element={<FAQ />} />
+            </Routes>
+          </Suspense>
         </motion.div>
       </div>
     </Router>
